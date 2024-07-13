@@ -1,2 +1,169 @@
 # Smart Mirror with Home Assistant
- Step by Step Creation of a Smart Mirror with Home Assistant
+Step by Step Creation of a Smart Mirror with Home Assistant. This is not ready yet.
+
+## Intro
+I had the idea to get rid of my old smart mirror, which is made with Magic Mirror. Do not get me wrong: Magic Mirror is es really greate solution but for me it was hard to maintain both software stacks.
+
+I have tried alot of ways to create a simple and efficient Kiosk mode with a Raspberry Pi zero 2. The following instructions sums up all my issues and solutions.
+
+## Hardware
+
+- Rasperry Pi Zero 2
+- Power Supply
+- Cables
+- PIR Sensor OR RCWL-0516 _(for movement detection to turn on/off the monitor)_
+- Monitor
+- SD Card
+- Mouse / Keyboard for the start
+
+You know, stuff to build a smart mirror or an kiosk system :-)
+
+
+## Installations for the Kiosk Mode
+
+My basic source for this was here: https://blog.r0b.io/post/minimal-rpi-kiosk/ 
+
+### OS
+The most efficient way I found starts with installing **Raspberry Pi OS (Legacy) Lite** from here: https://www.raspberrypi.com/software/operating-systems/ or with the **PI Imager** .
+
+### Setup the OS
+After you start the PI the first time and the installation is complete go to the PI Config:
+```bash
+sudo raspi-config
+```
+
+There you have to activate ssh:
+
+1. (3) Interface Options
+2. (I2) SSH
+3. Yes and ENTER
+4. Finish
+
+And now we setup the Boot Options to autologin with console:
+
+1. (1) System Options
+2. (S5) Boot / Auto Login
+3. (B2) Console Autologin
+4. Yes and ENTER
+5. Finish
+
+### Additional Software packages and settings
+Now you can go on locally or by ssh.
+
+#### 1.: update packages list (I think^^)
+```bash
+sudo apt-get update -qq
+```
+
+#### 2.: install the packages
+```bash
+sudo apt-get install --no-install-recommends xserver-xorg-video-all \
+  xserver-xorg-input-all xserver-xorg-core xinit x11-xserver-utils \
+  chromium-browser unclutter
+```
+
+#### 3.: create the .bash_profile
+```bash
+nano /home/pi/.bash_profile
+```
+Content:
+```sh
+if [ -z $DISPLAY ] && [ $(tty) = /dev/tty1 ]
+then
+  startx
+fi
+```
+save `ctrl + s` and close `ctrl + x`
+> to automatically start the gui. There's a check for the bash context first, so you don't accidentally start chromium whenever you ssh in.
+
+#### 4.: create the .xinitrc
+```bash
+nano /home/pi/.xinitrc
+```
+Content:
+```sh
+#!/usr/bin/env sh
+xset -dpms
+xset s off
+xset s noblank
+
+unclutter &
+chromium-browser http://IP.TO.YOUR.HA:8123 \
+  --window-size=1920,1080 \
+  --window-position=0,0 \
+  --start-fullscreen \
+  --kiosk \
+  --noerrdialogs \
+  --disable-translate \
+  --no-first-run \
+  --fast \
+  --fast-start \
+  --disable-infobars \
+  --disable-features=TranslateUI \
+  --overscroll-history-navigation=0 \
+  --disable-pinch \
+  --accept-lang=de-DE
+```
+save `ctrl + s` and close `ctrl + x`
+**<u>Important things:</u>**
+1. if you later in the process <u>rotate</u> your display, you have to change the <u>window-size</u> or if you have not a Full HD Display!
+2. <u>accept-lang=de-DE</u> should represent the language you need in the kiosk system because if you not set this, javascript stuff like dates will be handled in english: e.g.: http://www.lingoes.net/en/translator/langcode.htm
+
+#### 5.: the grafic settings
+To get some "old" code running we have to deactivate the "new" graphics driver. This may harm the hardware support, but in my case every thing works fine.
+
+```bash
+sudo nano /boot/config.txt
+```
+
+1. command out the following line with #
+```bash
+dtoverlay=vc4-kms-v3d
+```
+
+2. add `gpu_mem=128`
+3. add `display_hdmi_rotate=3` if you want to rotate your display.
+1 = 90°, 2 = 180° and 3 = 270°
+4. save `ctrl + s` and close `ctrl + x`
+
+```bash
+sudo reboot
+```
+
+## Auto On/Off Monitor on Movement
+If you want to power off you monitor with an script and turn it back on movement, follow the next steps.
+The Scripts based on the scripts from here: https://forum.magicmirror.builders/topic/6291/howto-turn-on-off-your-monitor-time-based-pir-button-app I have added some time based stuff.
+
+### Hardware
+You can use a simple PIR Sensor or a RCWL-0516 e.g. Both have the same wiring.
+- 5V
+- Ground
+- Out goes to the Pin we use in the script `monitor.py`. E.g. PIN GPIO17 => 11 on the board
+
+### Needed files
+The files you need are in the `monitor_on_off` directory. Copy them to the home directory of your pi user. By default: `/home/pi/`. If you renamed the user, please change the pathes in the `monitor.py` for the sh files.
+
+Now the files should be made execute able:
+```bash
+chmod +x monitor_on.sh
+chmod +x monitor_off.sh
+chmod +x monitor.py
+```
+
+### Autostart
+```bash
+sudo nano /etc/rc.local
+```
+Write the following line in the file (above the “exit 0”):
+```bash
+python3 /home/pi/monitor.py &
+```
+save `ctrl + s` and close `ctrl + x`
+
+```bash
+sudo reboot
+```
+
+## Installations for the Smart Mirror Dashbaord
+[TBD]
+Theme in `/themes/smart_mirror/`
