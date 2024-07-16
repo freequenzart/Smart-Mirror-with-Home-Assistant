@@ -254,7 +254,9 @@ kiosk_mode:
     2. Click on `API-KEY`
     3. Click on `API-KEY` again. the first time you are routed to the terms.
 
-    After that you can configure the Integration. I have used a tile for every station and they are only visible if the station is open:
+    After that you can configure the Integration.
+    
+    In first place, I have used a tile for every station and they are only visible if the station is open:
     ```yaml
     type: tile
     entity: sensor.STATION_STREET_ADRESS_super
@@ -272,12 +274,14 @@ kiosk_mode:
     grid_rows: 1
     ```
 
+    But for the better looks, I have created my one tile for the `Tankerkoenig` Integration. You will find every Information you need in the other repository: https://github.com/freequenzart/Custom-Lovelance-Card-for-Tankerkoenig-integration
+
 
     ***
     **C departure times for public transport:** https://github.com/VDenisyuk/home-assistant-transport `by hand`
     This one is special for some places. Maybe you have to pick another one for your region. The basic integration works fine but the linked lovelance card only worked after some changes so I had build my own:
 
-    you will finde the code here: `cards/dvb-card.js` [TBD]
+    you will finde the code here: `custom_cards/dvb-card.js` [TBD]
 
     > 1. Copy the dvb-card.js card module to the www directory of your Home Assistant. The same way you did for the sensor above. If it doesn't exist — create one.
     
