@@ -279,6 +279,7 @@ kiosk_mode:
 
     ***
     **C departure times for public transport:** https://github.com/VDenisyuk/home-assistant-transport `by hand`
+   
     This one is special for some places. Maybe you have to pick another one for your region. The basic integration works fine but the linked lovelance card only worked after some changes so I had build my own:
 
     you will finde the code here: `custom_cards/dvb-card.js` [TBD]
@@ -304,6 +305,18 @@ kiosk_mode:
 
     For the integration config, please follow the linked guide.
 
+
+    ***
+    **D Auto Reload Card:** `with HACS`
+   
+    After some time using the new setup, I recognised, that some Cards don't update anymore. The solution was to add the auto reload card which can be found here: https://github.com/ben8p/lovelace-auto-reload-card .
+    In the moment I have set it up to reload every 20min but I think, it can be set to 60min.
+   
+     ```yaml
+    type: custom:auto-reload-card
+    delay_in_min: 20
+    ```
+     
 <br>
 <br>
 
