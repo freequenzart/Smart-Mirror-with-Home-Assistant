@@ -41,7 +41,7 @@ class DVBCard extends HTMLElement {
                 <div class="direction">${departure.direction}</div>
                 <div class="time-slot">
                     ${departure.gap < 10
-                        ? `<div class="todeparture">In ${departure.gap} Minuten</div>`
+                        ? `<div class="todeparture">In ${departure.gap} min</div>`
                         : `<div class="time">${departure.time}</div>`
                     } 
                     
@@ -112,12 +112,12 @@ class DVBCard extends HTMLElement {
         <style>
             .container {
                 padding: 10px;
-                font-size: 14px;
+                font-size: ${ this.config && this.config.container_font_size ? this.config.container_font_size : '14px' };
                 display: flex;
                 flex-direction: column;
             }
             .stop {
-                font-size: 24px;
+                font-size: ${ this.config && this.config.stop_font_size ? this.config.stop_font_size : '24px' };
                 font-weight: 400;
                 width: 100%;
                 text-align: left;
@@ -172,18 +172,28 @@ class DVBCard extends HTMLElement {
             .direction {
                 align-self: center;
                 flex-grow: 1;
+                ${ this.config && this.config.max_size_direction ? 
+                    `
+                    max-width: ${ this.config.max_size_direction };
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    ` : '' };
             }
             .time {
                 align-self: flex-start;
                 padding-right: 0px;
+                white-space: nowrap;
             }
             .todeparture {
                 font-weight: 700;
+                white-space: nowrap;
             }
             .time-slot {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
+                white-space: nowrap;
             }
         </style>
         `;
