@@ -24,6 +24,8 @@ You know, stuff to build a smart mirror or an kiosk system :-)
 ## Installations for the Kiosk Mode
 
 My basic source for this was here: https://blog.r0b.io/post/minimal-rpi-kiosk/ 
+For trixie change, some info comes from here: https://alessandroscola.com/en/computers/web-kiosk-with-raspberry-pi-and-debian-13-trixie
+
 
 ### OS
 The most efficient way I found starts with installing **Raspberry Pi OS (Legacy) Lite** from here: https://www.raspberrypi.com/software/operating-systems/ or with the **PI Imager** .
@@ -49,6 +51,11 @@ And now we setup the Boot Options to autologin with console:
 4. Yes and ENTER
 5. Finish
 
+For Trixie autologin:
+1. (1) System Options
+2. (S6) Auto Login
+3. Yes and ENTER
+
 ### Additional Software packages and settings
 Now you can go on locally or by ssh.
 
@@ -63,6 +70,8 @@ sudo apt-get install --no-install-recommends xserver-xorg-video-all \
   xserver-xorg-input-all xserver-xorg-core xinit x11-xserver-utils \
   chromium-browser unclutter
 ```
+
+!!! New installations use ```chromium``` instead of ```chromium-browser``` .
 
 #### 3.: create the .bash_profile
 ```bash
@@ -110,6 +119,7 @@ save `ctrl + s` and close `ctrl + x`
 **<u>Important things:</u>**
 1. if you later in the process <u>rotate</u> your display, you have to change the <u>window-size</u> or if you have not a Full HD Display!
 2. <u>accept-lang=de-DE</u> should represent the language you need in the kiosk system because if you not set this, javascript stuff like dates will be handled in english: e.g.: http://www.lingoes.net/en/translator/langcode.htm
+3. In newer installations ```--overscroll-history-navigation=0 ``` is not working. YOu need to extend ```disable-features=TranslateUI, OverscrollHistoryNavigation``` or start chromium without kiost and fullscreen and surf to ```chrome://settings/``` and go to accessibility and deactivate switch bitween sites.
 
 #### 5.: the grafic settings
 To get some "old" code running we have to deactivate the "new" graphics driver. This may harm the hardware support, but in my case every thing works fine.
@@ -122,6 +132,7 @@ sudo nano /boot/config.txt
 ```bash
 dtoverlay=vc4-kms-v3d
 ```
+On my Trixie System on an Raspberri Pi 3 I had to add ```dtoverlay=vc4-fkms-v3d``` for fake drivers. After that it worked. With the monitor on/off stuff down below.
 
 2. add `gpu_mem=128`
 3. add `display_hdmi_rotate=3` if you want to rotate your display.
