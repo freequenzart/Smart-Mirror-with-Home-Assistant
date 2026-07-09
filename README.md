@@ -342,7 +342,9 @@ kiosk_mode:
 3. I have created some template sensors and used them in markdown cards:
 `Settings` -> `Devices` -> `Helper` -> `Add` -> `Template` -> `Template for a Sensor`
 <br>
+
 ---
+
 #### Date and Time
 Sensor for Date with day names and month (e.g. in german, in my code I called it, "Deutsches Datum" -> german date)
 ```python
