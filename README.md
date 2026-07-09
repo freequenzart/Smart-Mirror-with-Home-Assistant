@@ -28,7 +28,9 @@ For trixie change, some info comes from here: https://alessandroscola.com/en/com
 
 
 ### OS
-The most efficient way I found starts with installing **Raspberry Pi OS (Legacy) Lite** from here: https://www.raspberrypi.com/software/operating-systems/ or with the **PI Imager** .
+The newest Trixie light version is working, too now. I have documented the changes in this document and above you find the source for it.
+
+The old efficient way I found starts with installing **Raspberry Pi OS (Legacy) Lite** from here: https://www.raspberrypi.com/software/operating-systems/ or with the **PI Imager** .
 
 ### Setup the OS
 After you start the PI the first time and the installation is complete go to the PI Config:
@@ -375,18 +377,48 @@ From the good old Magic Mirrow project you maybe know the greetings in the mirro
 
 Sensor for the text (in my code I call it "Botschaft im Spiegel" -> Message in mirror):
 ```python
-{% if(now().hour < 6) %}
-  I hope you sleep well!
-{% elif(now().hour < 11) %}  
-  Good morning, good morning, good morning sunshine!
-{% elif(now().hour < 14) %}  
-  Lunchtime. We're sure to be cooking delicious meals again soon!
-{% elif(now().hour < 18) %}
-  Beer o'clock is the best time at work!
-{% elif(now().hour < 21) %}
-  I'm looking forward to a delicious dinner!
+{% if now().hour < 6 %}
+  {{ [
+    "I hope you sleep well!",
+    "Sweet dreams, the night is still young!",
+    "Counting sheep already? Rest well!",
+    "The stars are out — time to recharge."
+  ] | random }}
+{% elif now().hour < 11 %}
+  {{ [
+    "Good morning, good morning, good morning sunshine!",
+    "Rise and shine, a new day awaits!",
+    "Morning! Grab a coffee and conquer the day.",
+    "Wakey wakey! The world is ready for you."
+  ] | random }}
+{% elif now().hour < 14 %}
+  {{ [
+    "Lunchtime. We're sure to be cooking delicious meals again soon!",
+    "Time to refuel — what's on the menu today?",
+    "Midday break! Treat yourself to something tasty.",
+    "Hungry yet? Lunch is the highlight of the day."
+  ] | random }}
+{% elif now().hour < 18 %}
+  {{ [
+    "Beer o'clock is the best time at work!",
+    "Afternoon slump? Push through, you've got this!",
+    "The finish line is in sight — keep going!",
+    "Almost there, the evening is calling."
+  ] | random }}
+{% elif now().hour < 21 %}
+  {{ [
+    "I'm looking forward to a delicious dinner!",
+    "Evening vibes — time to unwind and relax.",
+    "Dinner time! Enjoy every bite.",
+    "Kick back, the hard part of the day is done."
+  ] | random }}
 {% else %}
-  You turn night into day! But sleep well soon.
+  {{ [
+    "You turn night into day! But sleep well soon.",
+    "Burning the midnight oil? Don't forget to rest.",
+    "The night owl strikes again! Take it easy.",
+    "Still up? The pillow misses you."
+  ] | random }}
 {% endif %}
 ```
 The markdown for the card looks like this:
@@ -412,6 +444,8 @@ content: |-
   ## 
   ## My Markdown Heading
 ```
+Or you may can use the "new" heading cards.
+
 
 ## Summary
 How you create the basic dashboard, is up on your own. You can used a grid or the new experimental areas. But I recomment to use stacks: horizonal / vertical.
